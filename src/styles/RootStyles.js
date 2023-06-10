@@ -179,6 +179,10 @@ template {
   display: none;
 }
 
+*{
+  box-sizing: border-box;
+}
+
 body{
     background-color: rgb(73,163,60);
 }
