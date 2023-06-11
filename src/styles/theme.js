@@ -10,6 +10,7 @@ export const theme = {
 
     color:{
         primary: '',
+        secondary:'#08aecb',
 
         bg_white: '#fffde7'
     }

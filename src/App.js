@@ -10,6 +10,8 @@ import NavContainer from "./containers/NavContainer/NavContainer";
 import SelectorBar from "./components/SelectorBar/SelectorBar";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Header from "./components/Header/Header";
+import ListContainer from "./containers/ListContainer/ListContainer";
+import Card from "./components/Card/Card";
 
 function App() {
   return (
@@ -22,6 +24,9 @@ function App() {
             <SelectorBar />
             <SearchBar />
           </NavContainer>
+          <ListContainer>
+            <Card />
+          </ListContainer>
         </MainContainer>
       </AppProvider>
     </ThemeProvider>

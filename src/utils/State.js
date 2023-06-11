@@ -1,8 +1,15 @@
+import { URL } from "./Vars";
+
 class State{
     constructor(){
         this.characters = [];
         this.filterKeys = ['status', 'species', 'type', 'gender', 'origin', 'location', 'episode']
         this.filterCount = new Filters();
+        this.factory = new FactoryRequester();
+    }
+
+    setRequester(type){
+        
     }
 
     setCharacters(list){
@@ -45,6 +52,52 @@ class Filters{
         this.episode.add(char.episode);
     }
 };
+
+
+class Requester{
+    constructor(label, base, category, requester, ){
+        this.label = label;
+        this.baseURL = base;
+        this.category = category;
+        this.requester = requester;
+    }
+
+    build(){
+        return `${this.baseURL}/${this.category}/`
+    }
+};
+
+class CharacterRequester extends Requester{
+    constructor(){
+        super('Characters', URL.BASE, URL.CATEGORY.CHAR)
+    }
+};
+
+class LocationRequester extends Requester{
+    constructor(){
+        super('Locations', URL.BASE, URL.CATEGORY.LOC)
+    }
+};
+
+class EpisodeRequester extends Requester{
+    constructor(){
+        super('Episodes', URL.BASE, URL.CATEGORY.EP)
+    }
+};
+
+class FactoryRequester{
+    getRequester(type){
+        if(type === URL.CATEGORY.CHAR){
+            return new CharacterRequester();
+        }
+        else if( type === URL.CATEGORY.LOC){
+            return new LocationRequester();
+        }
+        else if(type === URL.CATEGORY.EP){
+            return new EpisodeRequester();
+        }
+    }
+}
 
 export default State;
 
