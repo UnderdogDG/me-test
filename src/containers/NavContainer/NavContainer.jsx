@@ -11,6 +11,10 @@ function NavContainer({ children }){
 const Nav = styled.nav`
     width: 100%;
     padding: 20px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 `;
 
 export default NavContainer;

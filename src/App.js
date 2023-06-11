@@ -7,7 +7,9 @@ import { AppProvider } from "./hooks/AppContext";
 
 import { MainContainer } from "./containers/MainContainer/MainContainer";
 import NavContainer from "./containers/NavContainer/NavContainer";
-import SelectorBar from "./components/SelectorBar/Selector";
+import SelectorBar from "./components/SelectorBar/SelectorBar";
+import SearchBar from "./components/SearchBar/SearchBar";
+import Header from "./components/Header/Header";
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
       <RootStyle />
       <AppProvider>
         <MainContainer>
+          <Header />
           <NavContainer>
             <SelectorBar />
+            <SearchBar />
           </NavContainer>
         </MainContainer>
       </AppProvider>

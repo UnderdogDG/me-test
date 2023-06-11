@@ -185,5 +185,9 @@ template {
 
 body{
     background-color: rgb(73,163,60);
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
 }
 `;
