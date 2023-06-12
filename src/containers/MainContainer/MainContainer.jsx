@@ -14,4 +14,10 @@ const Main = styled.main`
     height: 100vh;
     background: rgb(73,163,60);
     background: linear-gradient(45deg, rgba(73,163,60,1) 6%, rgba(151,200,63,1) 88%);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: hidden;
 `;

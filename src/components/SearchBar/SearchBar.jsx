@@ -1,11 +1,23 @@
 import styled from "styled-components";
 
+import { useContext } from "react";
+import { AppContext } from "../../hooks/AppContext";
+
 function SearchBar(){
+
+    const { state, setState } = useContext( AppContext );
+
+    const getData = async()=>{
+        let res = await state.getData();
+        setState(prev=>prev.setCharacters(res).changeToList(true));
+    }
+
     return(
         <SearchContainer>
             <SearchWrapper>
-                <SearchInput />
-                <SearchButton />
+                <SearchButton className="active" onClick={ ()=>getData() }>
+                    All
+                </SearchButton>
             </SearchWrapper>
         </SearchContainer>
     );
@@ -14,7 +26,7 @@ function SearchBar(){
 const SearchContainer = styled.div`
     width: 100%;
     max-width: ${ ({ theme })=>theme.breakpoints.xxl };
-    padding: 10px 30px;
+    padding: 10px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +35,6 @@ const SearchContainer = styled.div`
 const SearchWrapper = styled.div`
     width: 100%;
     height: 40px;
-    max-width: 400px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -41,12 +52,33 @@ const SearchInput = styled.input`
 `;
 
 const SearchButton = styled.button`
-    width: 10%;
-    height: 100%;
-    max-width: 120px;
-    min-width: 80px;
-    border: 1px solid gray;
-    border-radius: 0 8px 8px 0;
+    width: 30%;
+    min-width: 200px;
+    max-width: 200px;
+    padding: 15px;
+    margin: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 120px;
+    transform: scale(1.0);
+    transition: transform 0.3s ease-out;
+    box-shadow: ${ ({ theme })=>theme.shadow };
+    border: ${ ({ theme })=> theme.color.buttonMulti.enabled.border };
+    background-color: ${ ({ theme })=> theme.color.buttonMulti.enabled.bg};
+    color: ${ ({ theme })=> theme.color.buttonMulti.enabled.fontColor };
+    font-size: 20px;
+
+    &.active{
+        border: ${ ({ theme })=> theme.color.buttonMulti.active.border };
+        background-color: ${ ({ theme })=>theme.color.secondary};
+        color: ${ ({ theme })=> theme.color.buttonMulti.active.fontColor }
+    }
+
+    &:hover{
+        transform: scale(1.05);
+    }
 `;
 
 export default SearchBar;

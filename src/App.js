@@ -6,12 +6,8 @@ import { RootStyle } from "./styles/RootStyles";
 import { AppProvider } from "./hooks/AppContext";
 
 import { MainContainer } from "./containers/MainContainer/MainContainer";
-import NavContainer from "./containers/NavContainer/NavContainer";
-import SelectorBar from "./components/SelectorBar/SelectorBar";
-import SearchBar from "./components/SearchBar/SearchBar";
 import Header from "./components/Header/Header";
-import ListContainer from "./containers/ListContainer/ListContainer";
-import Card from "./components/Card/Card";
+import ModuleChanger from "./containers/ModuleChanger/ModuleChanger";
 
 function App() {
   return (
@@ -20,13 +16,7 @@ function App() {
       <AppProvider>
         <MainContainer>
           <Header />
-          <NavContainer>
-            <SelectorBar />
-            <SearchBar />
-          </NavContainer>
-          <ListContainer>
-            <Card />
-          </ListContainer>
+          <ModuleChanger />
         </MainContainer>
       </AppProvider>
     </ThemeProvider>

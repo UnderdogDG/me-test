@@ -1,10 +1,22 @@
 import styled from "styled-components";
 
+import { useContext } from "react";
+import { AppContext } from "../../hooks/AppContext";
+
+import Card from "../../components/Card/Card";
+
 function ListContainer({ children }){
+
+    const { state } = useContext( AppContext );
+
     return(
         <List>
             <ListWrapper>
-                { children }
+                {
+                    state.characters.map( (e, i) =>
+                        <Card { ...e } key={i}/>
+                    )
+                }
             </ListWrapper>
         </List>
     );
@@ -24,6 +36,7 @@ const ListWrapper = styled.ul`
     display: flex;
     justify-content: center;
     align-items: stretch;
+    flex-wrap: wrap;
 `;
 
 export default ListContainer;

@@ -2,25 +2,63 @@ import { URL } from "./Vars";
 
 class State{
     constructor(){
+        this.name = URL.CATEGORY.CHAR;
         this.characters = [];
-        this.filterKeys = ['status', 'species', 'type', 'gender', 'origin', 'location', 'episode']
-        this.filterCount = new Filters();
         this.factory = new FactoryRequester();
+        this.manager = new CharacterRM();
+        this.isLogged = true;
+        this.isList = false;
+        this.sublist = null;
+    }
+
+    getData(){
+        return this.manager.request().then(res=>[ ...res.results ] );
     }
 
     setRequester(type){
-        
+
+        this.name = type;
+        this.manager = this.factory.getRequester(type);
+
+        if(type === URL.CATEGORY.CHAR){
+            this.sublist = null;
+        }
+        else{
+            this.sublist = [];
+        }
+
+        return this.updatedState();
     }
 
     setCharacters(list){
-        this.characters = [...list];
-        this.updateFilters();
+        this.characters = [...list]
+        /* this.updateFilters(); */
+        return this.updatedState();
+    }
+
+    setSublist(list){
+        this.sublist = [...list];
+        return this.updatedState();
+    }
+
+    changeToList(value){
+        this.isList = value;
+        return this.updatedState();
+    }
+
+    changeViewToggle(){
+        if(this.isList){
+            this.isList = false;
+        }
+        else{
+            this.isList = true;
+        }
         return this.updatedState();
     }
 
     updateFilters(){
         this.characters.forEach( char =>{
-            this.filterCount = new Filters().setKeys(char);
+            this.filterCount.setKeys(char)
         });
     }
 
@@ -29,121 +67,124 @@ class State{
         Object.setPrototypeOf(state, State.prototype);
         return state;
     }
-};
 
-class Filters{
-    constructor(){
-        this.status = new Set();
-        this.species =  new Set();
-        this.type = new Set();
-        this.gender = new Set();
-        this.origin =  new Set();
-        this.location =  new Set();
-        this.episode =  new Set();
-    }
-
-    setKeys(char){
-        this.status.add(char.status);
-        this.species.add(char.species);
-        this.type.add(char.type);
-        this.gender.add(char.gender);
-        this.origin.add(char.origin);
-        this.location.add(char.location);
-        this.episode.add(char.episode);
+    closeModal(){
+        this.modalOpen = false;
+        return this.updatedState();
     }
 };
 
-
-class Requester{
-    constructor(label, base, category, requester, ){
+class RequestManager{
+    constructor(label, base, category){
         this.label = label;
         this.baseURL = base;
         this.category = category;
-        this.requester = requester;
+        this.next = null;
+        this.prev = null;
+        this.pages = 0;
+        this.count = 0;
+        this.page = 1;
     }
 
-    build(){
+    request(){
+        let header = new Headers();
+        header.append( "Content-Type", "application/json; charset=UTF-8" );
+        return fetch(this.buildURL()).then(res=>res.json())
+    }
+
+    getGroup(str){
+        let header = new Headers();
+        header.append( "Content-Type", "application/json; charset=UTF-8" );
+        return fetch('https://rickandmortyapi.com/api/character/'+str).then(res=>res.json())
+    }
+
+    buildURL(){
         return `${this.baseURL}/${this.category}/`
     }
+
+    getNext(){
+        const getData = async()=>{
+            let res = await fetch(this.next).then(res=>res.json());
+            this.next = res.info.next;
+            this.prev = res.info.prev;
+            return res;
+        }
+
+        return (this.next) ? getData() : null
+    }
+
+    getPrev(){
+
+        const getData = async()=>{
+            let res = await fetch(this.prev).then(res=>res.json());
+            this.next = res.info.next;
+            this.prev = res.info.prev;
+            return res;
+        }
+
+        return (this.prev) ? getData() : null
+
+    }
 };
 
-class CharacterRequester extends Requester{
+
+class CharacterRM extends RequestManager{
     constructor(){
         super('Characters', URL.BASE, URL.CATEGORY.CHAR)
+        this.sublist = null;
     }
 };
 
-class LocationRequester extends Requester{
+class LocationRM extends RequestManager{
     constructor(){
         super('Locations', URL.BASE, URL.CATEGORY.LOC)
+        
     }
+
+    getSublist(){
+        const getData = async()=>{
+            let res = await fetch(this.buildURL() + `?page=${this.page}`).then(res=>res.json());
+            this.next = res.info.next;
+            this.prev = res.info.prev;
+            return res;
+        }
+
+        return getData();
+    }
+
+    
 };
 
-class EpisodeRequester extends Requester{
+class EpisodeRM extends RequestManager{
     constructor(){
         super('Episodes', URL.BASE, URL.CATEGORY.EP)
     }
+
+    getSublist(){
+        const getData = async()=>{
+            let res = await fetch(this.buildURL() + `?page=${this.page}`).then(res=>res.json());
+            this.next = res.info.next;
+            this.prev = res.info.prev;
+            return res;
+        }
+
+        return getData();
+    }
 };
+
 
 class FactoryRequester{
     getRequester(type){
         if(type === URL.CATEGORY.CHAR){
-            return new CharacterRequester();
+            return new CharacterRM();
         }
         else if( type === URL.CATEGORY.LOC){
-            return new LocationRequester();
+            return new LocationRM();
         }
         else if(type === URL.CATEGORY.EP){
-            return new EpisodeRequester();
+            return new EpisodeRM();
         }
     }
 }
 
 export default State;
-
-/* 
-EPISODES
-count 51
-pages 3
-next url / null
-prev url / null
-results: list
-	id num
-	*name 
-	air_date
-	*episode S00E00
-	characters list<character>
-	url
-
-LOCATION
-count 126
-pages 7
-next url / null
-prev url / null
-results: list
-	id
-	*name
-	*type
-	*dimension
-	residents list<character>
-	url
-
-CHARACTER
-count 826
-pages 42
-next url / null
-prev url / null
-results: list
-	id num
-	*name
-	*status
-	*species
-	*type
-	*gender
-	origin
-	location
-	image
-	episode
-	url
-	created
- */

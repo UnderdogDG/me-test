@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-function Card(){
+function Card({ name, image}){
     return(
         <CardContainer>
             <CardWrapper>
                 <ImageContainer>
-                    <img src="https://rickandmortyapi.com/api/character/avatar/361.jpeg" alt="Toxic Rick"/>
+                    <img src={ image } alt={ name }/>
                 </ImageContainer>
                 <InfoContainer>
                     <div className="title-container">
-                        <h2>Toxic Rick</h2>
+                        <h2>{ name }</h2>
                     </div>
 
                 </InfoContainer>
@@ -20,8 +20,9 @@ function Card(){
 }
 
 const CardContainer = styled.li`
-    width: 30%;
-    max-width: 200px;
+    width: 20%;
+    min-width: 250px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -30,6 +31,8 @@ const CardContainer = styled.li`
 
 const CardWrapper = styled.div`
     width: 100%;
+    height: 100%;
+    max-width: 200px;
     padding: 12px;
     border-radius: 10px;
     background-color: ${ ({ theme })=> theme.color.bg_white };
